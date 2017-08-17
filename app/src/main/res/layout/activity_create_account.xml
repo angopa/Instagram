@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paezand.instagram.CreateAccount">
+    tools:context="com.paezand.instagram.CreateAccountActivity">
 
     <EditText
-        android:id="@+id/sign_in_user_name"
+        android:id="@+id/sign_up_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/sign_in_password"
+        android:id="@+id/sign_up_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -32,7 +32,7 @@
         android:inputType="textPassword"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_user_name" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_user_name" />
 
     <Button
         android:id="@+id/sign_in_button"
@@ -41,8 +41,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="31dp"
-        android:text="@string/label_sign_in"
+        android:text="@string/label_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_password" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_password" />
 </android.support.constraint.ConstraintLayout>

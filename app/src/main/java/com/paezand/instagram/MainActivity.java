@@ -1,9 +1,10 @@
 package com.paezand.instagram;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
+import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -11,18 +12,17 @@ import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
 
     @BindView(R.id.login_user_name)
     protected EditText userName;
 
-    @BindView(R.id.login_passwor)
+    @BindView(R.id.login_password)
     protected EditText password;
 
     @Override
@@ -30,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        if (ParseUser.getCurrentUser() != null) {
+            displayUserList();
+        }
+
+        password.setOnKeyListener(this);
 
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 public void done(final ParseUser user, final ParseException parseException) {
                     if (parseException == null) {
                         Toast.makeText(MainActivity.this, "Welcome " + userName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+                        displayUserList();
                     } else {
                         Toast.makeText(MainActivity.this, parseException.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -55,9 +62,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onKey(View dialogInterface, int codeKey, KeyEvent keyEvent) {
+        if (codeKey == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            onActionButtonTapped();
+        }
+        return false;
+    }
+
     @OnClick(R.id.create_account)
     protected void onCreateAccountTapped() {
-        Intent intent = new Intent(this, CreateAccount.class);
+        Intent intent = new Intent(this, CreateAccountActivity.class);
+        startActivity(intent);
+    }
+
+    private void displayUserList() {
+        Intent intent = new Intent(this, UserListActivity.class);
         startActivity(intent);
     }
 }

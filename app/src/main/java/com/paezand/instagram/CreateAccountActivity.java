@@ -3,6 +3,8 @@ package com.paezand.instagram;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,12 +16,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CreateAccount extends AppCompatActivity {
+public class CreateAccountActivity extends AppCompatActivity implements View.OnKeyListener{
 
-    @BindView(R.id.sign_in_user_name)
+    @BindView(R.id.sign_up_user_name)
     protected TextView userName;
 
-    @BindView(R.id.sign_in_password)
+    @BindView(R.id.sign_up_password)
     protected TextView password;
 
     @Override
@@ -45,14 +47,22 @@ public class CreateAccount extends AppCompatActivity {
                 @Override
                 public void done(final ParseException e) {
                     if (e == null) {
-                        Toast.makeText(CreateAccount.this, "User Create!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccountActivity.this, "User Create!", Toast.LENGTH_SHORT).show();
                         returnMainActivity();
                     } else {
-                        Toast.makeText(CreateAccount.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccountActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onKey(View dialogInterface, int codeKey, KeyEvent keyEvent) {
+        if (codeKey == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            onSignInButtonTapped();
+        }
+        return false;
     }
 
     private void returnMainActivity() {
