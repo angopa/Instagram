@@ -1,7 +1,13 @@
 package com.paezand.instagram;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,6 +21,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.paezand.instagram.util.Contants.PARSE_COLUMN_USER_USERNAME;
 
 public class UserListActivity extends AppCompatActivity {
 
@@ -37,15 +45,23 @@ public class UserListActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, userNames);
 
         userNamesListView.setAdapter(adapter);
+
+        userNamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), UserImagesActivity.class);
+                intent.putExtra(PARSE_COLUMN_USER_USERNAME, userNames.get(i));
+                startActivity(intent);
+            }
+        });
     }
 
     private void obtainUserNamesFromServer() {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
 
-        query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
+        query.whereNotEqualTo(PARSE_COLUMN_USER_USERNAME, ParseUser.getCurrentUser().getUsername());
 
         query.findInBackground(new FindCallback<ParseUser>() {
-
             @Override
             public void done(List<ParseUser> objects, ParseException parseException) {
                 if (parseException == null) {
@@ -53,13 +69,34 @@ public class UserListActivity extends AppCompatActivity {
                         for (ParseUser user : objects) {
                             userNames.add(user.getUsername());
                         }
+                        adapter.notifyDataSetChanged();
                     }
-
-                    adapter.notifyDataSetChanged();
                 } else {
                     parseException.printStackTrace();
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.share_image) {
+            Intent intent = new Intent(this, SelectImagesActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.log_out) {
+            ParseUser.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
