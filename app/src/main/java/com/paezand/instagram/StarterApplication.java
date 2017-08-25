@@ -8,8 +8,6 @@ import com.parse.ParseUser;
 
 public class StarterApplication extends Application {
 
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -30,6 +28,5 @@ public class StarterApplication extends Application {
         //Optional enable public read access
         defaultACL.setPublicReadAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
-
     }
 }
